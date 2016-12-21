@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
+var flash    = require('connect-flash');
 
 var app = express();
 
@@ -28,12 +29,16 @@ app.use(require('node-sass-middleware')({
 app.use(express.static(path.join(__dirname, 'public')));
 
 // required for passport
-app.use(session({ secret: process.env.SESSION_SECRET || 'grudanplattformdefaultsecret' }));
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'grudanplattformdefaultsecret',
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-require('./app/routes.js')(app, passport);
+require('./routes/login.js')(app, passport);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
