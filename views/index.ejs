@@ -1,4 +1,6 @@
-<%- include('header.ejs', { title: 'Grudan Platform' }) -%>
+<%- include('header.ejs', { title: 'Grudan Platform' }) %>
+
+<% if (!user) { %>
 <div class="jumbotron text-center">
     <h1><span class="fa fa-lock"></span> Node Authentication</h1>
 
@@ -7,9 +9,8 @@
     <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
     <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>
 </div>
-
-<% if (user) { %>
-<a href="/profile" class="btn btn-default"><span class="fa fa-user"></span> Profile</a>
+<% } else { %>
+  Popel!
 <% } %>
 
-<%- include('footer.ejs') -%>
+<%- include('footer.ejs') %>
