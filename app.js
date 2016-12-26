@@ -13,6 +13,8 @@ require('./config/passport')(passport);
 
 var app = express();
 
+// Use native promises
+mongoose.Promise = global.Promise;
 mongoose.connect('localhost:27017');
 
 // view engine setup
