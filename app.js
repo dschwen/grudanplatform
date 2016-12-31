@@ -1,21 +1,31 @@
-var express = require('express');
-var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var mongoose = require('mongoose');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var flash    = require('connect-flash');
 
+// Passport authentication
 var passport = require('passport');
 require('./config/passport')(passport);
 
+// Express web server setup
+var express = require('express');
+var http = require('http');
+var socketio = require('socket.io');
 var app = express();
+var server = http.Server(app);
+var io = socketio(server);
 
-// Use native promises
+// Mongoose setup
+var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('localhost:27017');
+
+// Redis integration
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
+var redisStore = new RedisStore();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,7 +45,7 @@ app.use(require('node-sass-middleware')({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// required for passport
+// Session setup required for passport
 app.use(session({
   secret: process.env.SESSION_SECRET || 'grudanplattformdefaultsecret',
   resave: false,
